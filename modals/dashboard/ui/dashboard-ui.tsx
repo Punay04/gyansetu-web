@@ -10,7 +10,7 @@ const DashboardUi = () => {
   const username = useStore((state) => state.username);
   const [totalStudentsCount, setTotalStudentsCount] = React.useState<
     string | number
-  >("0");
+  >("Loading...");
 
   useEffect(() => {
     const totalStudents = async () => {
@@ -30,10 +30,12 @@ const DashboardUi = () => {
     }, 3000);
   }, []);
 
+  const [recentActivities, setRecentActivities] = React.useState<string[]>([]);
+
   const stats = [
     { title: "Total Students", value: totalStudentsCount, icon: Users },
     { title: "Challenges Completed", value: "1,847", icon: Trophy },
-    { title: "Badges Earned", value: "892", icon: Award },
+    { title: "Badges Earned", value: recentActivities.length, icon: Award },
     { title: "Average Engagement", value: "87%", icon: TrendingUp },
   ];
 
@@ -64,8 +66,6 @@ const DashboardUi = () => {
       fetchTopStudents();
     }, 3000);
   }, []);
-
-  const [recentActivities, setRecentActivities] = React.useState<string[]>([]);
 
   useEffect(() => {
     const fetchRecentActivities = async () => {
@@ -128,6 +128,9 @@ const DashboardUi = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
+              {!topStudents.length && (
+                <p className="text-sm text-gray-500">Loading...</p>
+              )}
               {topStudents.map((student, index) => (
                 <div
                   key={index}
@@ -159,6 +162,9 @@ const DashboardUi = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
+              {!recentActivities.length && (
+                <p className="text-sm text-gray-500">Loading...</p>
+              )}
               {recentActivities.map((d: any) => (
                 <div key={d.studentName} className="p-3 bg-gray-50 rounded">
                   <p className="font-medium text-gray-900"></p>

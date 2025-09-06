@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import { SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
@@ -20,6 +21,7 @@ interface Student {
 
 const StudentsPageUi = () => {
   const [students, setStudents] = React.useState<Student[]>([]);
+  const [viewStudents, setViewStudents] = React.useState<Student[]>([]);
 
   const router = useRouter();
 
@@ -44,6 +46,7 @@ const StudentsPageUi = () => {
           },
         }));
         setStudents(data);
+        setViewStudents(data);
       } catch (error) {
         console.error("Error fetching students:", error);
       }
@@ -69,23 +72,24 @@ const StudentsPageUi = () => {
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative">
               <input
-                placeholder="Search students..."
+                placeholder="Search student..."
                 className="pl-9 pr-3 py-2 border border-gray-200 rounded w-full sm:w-56 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                onChange={(e) => {
+                  const query = e.target.value.toLowerCase();
+                  if (query === "") {
+                    setViewStudents(students);
+                  } else {
+                    setViewStudents(
+                      students.filter((s) =>
+                        s.name.toLowerCase().includes(query)
+                      )
+                    );
+                  }
+                }}
               />
-              <svg
-                className="w-4 h-4 absolute left-3 top-2.5 text-gray-400"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 3.5a7.5 7.5 0 0013.15 13.15z"
-                />
-              </svg>
+              <div className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <SearchIcon size={20} />
+              </div>
             </div>
             <button className="py-2 px-4 bg-orange-500 text-white font-medium rounded hover:bg-orange-600 transition">
               Add Student
@@ -117,7 +121,14 @@ const StudentsPageUi = () => {
                 </tr>
               </thead>
               <tbody>
-                {students.map((s) => (
+                {viewStudents.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="text-center text-gray-500 py-6">
+                      No students found.
+                    </td>
+                  </tr>
+                )}
+                {viewStudents.map((s) => (
                   <tr
                     key={s.id}
                     className="border-b border-gray-100 hover:bg-gray-50"

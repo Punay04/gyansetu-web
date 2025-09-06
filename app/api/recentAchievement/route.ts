@@ -20,7 +20,6 @@ export async function POST(request: NextRequest) {
             name: true,
             achievements: {
               orderBy: { awardedAt: "desc" },
-              take: 5,
             },
           },
         },
