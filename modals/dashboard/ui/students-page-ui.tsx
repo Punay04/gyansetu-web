@@ -1,0 +1,181 @@
+"use client";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+
+interface Student {
+  id: string;
+  name: string;
+  email: string;
+  class: string;
+  analytics: {
+    progress: number;
+    points: number;
+    streak: number;
+  };
+  achievements: {
+    badges: string[];
+  };
+}
+
+const StudentsPageUi = () => {
+  const [students, setStudents] = React.useState<Student[]>([]);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.post("/api/studentsList", {
+          teacherId: "ad39727c-8c2c-4057-8dc2-74939a7496cf",
+        });
+        const data = response.data.map((s: any) => ({
+          id: s.id,
+          name: s.name,
+          email: s.email,
+          class: s.class,
+          analytics: {
+            progress: s.analytics?.[0]?.progress || 0,
+            points: s.analytics?.[0]?.points || 0,
+            streak: s.analytics?.[0]?.streak || 0,
+          },
+          achievements: {
+            badges: s.achievements?.map((a: any) => a.badge) || [],
+          },
+        }));
+        setStudents(data);
+      } catch (error) {
+        console.error("Error fetching students:", error);
+      }
+    };
+
+    setTimeout(() => {
+      fetchStudents();
+    }, 3000);
+    // fetchStudents();
+  }, []);
+
+  return (
+    <div className="p-6 space-y-5 bg-gray-50 min-h-screen">
+      <div className="max-w-[1200px] mx-auto">
+        {/* Header */}
+        <header className="bg-white p-6 rounded-lg mb-5 flex flex-col md:flex-row justify-between md:items-center gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Students</h1>
+            <p className="text-sm text-gray-600 mt-1">
+              Manage your class students
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative">
+              <input
+                placeholder="Search students..."
+                className="pl-9 pr-3 py-2 border border-gray-200 rounded w-full sm:w-56 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              />
+              <svg
+                className="w-4 h-4 absolute left-3 top-2.5 text-gray-400"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 3.5a7.5 7.5 0 0013.15 13.15z"
+                />
+              </svg>
+            </div>
+            <button className="py-2 px-4 bg-orange-500 text-white font-medium rounded hover:bg-orange-600 transition">
+              Add Student
+            </button>
+          </div>
+        </header>
+
+        {/* Students Table */}
+        <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Student
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Class
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Progress
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Points
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Badges
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((s) => (
+                  <tr
+                    key={s.id}
+                    className="border-b border-gray-100 hover:bg-gray-50"
+                    onClick={() => {
+                      router.push(`/dashboard/students/${s.id}`);
+                    }}
+                  >
+                    <td className="px-4 py-3">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-8 w-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-medium">
+                          {s.name.split(" ")[0][0]}
+                        </div>
+                        <div className="ml-3">
+                          <p className="font-medium text-gray-900">{s.name}</p>
+                          <p className="text-xs text-gray-500">ID: {s.id}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-700">
+                      {s.class}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="w-32 bg-gray-200 rounded-full h-2">
+                        <div
+                          className="h-2 bg-orange-500 rounded-full"
+                          style={{ width: `${s.analytics.progress}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-500 mt-1">
+                        {s.analytics.progress}%
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex space-x-2">
+                        {s.analytics.points} pts
+                      </div>
+                    </td>
+                    <td>
+                      <div className="text-sm text-gray-700 ml-2">
+                        {s.achievements.badges.map((badge) => (
+                          <span
+                            key={badge}
+                            className="inline-block bg-orange-100 text-orange-600 rounded-full px-2 py-1 text-xs font-medium mr-1"
+                          >
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default StudentsPageUi;

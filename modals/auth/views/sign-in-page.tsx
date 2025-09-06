@@ -4,9 +4,12 @@ import { Toaster } from "react-hot-toast";
 
 const SignInPage = () => {
   return (
-    <div className="min-h-screen flex justify-center items-center bg-white">
-      <SignInBox />
-      <Toaster />
+    <div className="min-h-screen flex flex-col md:flex-row">
+      {/* Right side - Sign in form */}
+      <div className="w-full flex justify-center items-center bg-gray-50 p-4">
+        <SignInBox />
+        <Toaster position="top-right" />
+      </div>
     </div>
   );
 };

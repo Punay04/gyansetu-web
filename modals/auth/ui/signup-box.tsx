@@ -38,88 +38,158 @@ const SignupBox = () => {
   };
 
   return (
-    <div
-      className="bg-white w-full max-w-md mx-auto mt
-    -10 p-8 rounded-lg shadow-lg border border-neutral-200"
-    >
-      <div className="mb-4 text-center">
-        <span className="inline-block text-3xl font-extrabold text-black tracking-tight">
+    <div className="bg-white w-full max-w-md mx-auto p-6 rounded shadow">
+      <div className="md:hidden mb-4 text-center">
+        <span className="inline-block text-xl font-bold text-black">
           ज्ञान<span className="text-orange-500">Setu</span>
         </span>
-        <p className="mt-2 text-sm text-black font-medium">
-          Empowering Teachers with Analytics to Monitor Student Performance
-        </p>
-        <p className="mt-1 text-xs text-neutral-600">
-          ज्ञानSetu is an advanced analytics platform designed to help teachers
-          track, analyze, and improve student outcomes with actionable insights.
-        </p>
       </div>
-      <h2 className="text-xl font-bold text-black mb-6 text-center">
-        Teacher Signup
-      </h2>
-      <form className="space-y-5" onSubmit={handleSignup}>
+
+      <h2 className="text-xl font-bold text-gray-900 mb-1">Create account</h2>
+      <p className="text-sm text-gray-600 mb-6">
+        Join our platform as a teacher
+      </p>
+
+      <form className="space-y-4" onSubmit={handleSignup}>
         <div>
           <label
-            className="block text-sm font-medium text-black mb-1"
+            className="block text-sm font-medium text-gray-700 mb-1"
             htmlFor="name"
           >
             Full Name
           </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            className="w-full px-4 py-2 border border-neutral-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
-            required
-            onChange={(e) => setName(e.target.value)}
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-gray-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Reena Sharma"
+              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-orange-500"
+              required
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
         </div>
+
         <div>
           <label
-            className="block text-sm font-medium text-black mb-1"
+            className="block text-sm font-medium text-gray-700 mb-1"
             htmlFor="email"
           >
             Email
           </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="w-full px-4 py-2 border border-neutral-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-gray-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </svg>
+            </div>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="teacher@example.com"
+              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-orange-500"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
         </div>
+
         <div>
           <label
-            className="block text-sm font-medium text-black mb-1"
+            className="block text-sm font-medium text-gray-700 mb-1"
             htmlFor="password"
           >
             Password
           </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className="w-full px-4 py-2 border border-neutral-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-gray-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-orange-500"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <p className="mt-1 text-xs text-gray-500">Min 8 characters</p>
         </div>
+
+        <div className="flex items-center">
+          <input
+            id="terms"
+            name="terms"
+            type="checkbox"
+            className="h-3.5 w-3.5 border-gray-300 rounded text-orange-500 focus:ring-orange-500"
+            required
+          />
+          <label htmlFor="terms" className="ml-2 block text-xs text-gray-600">
+            I agree to the{" "}
+            <a href="#" className="text-orange-600 hover:text-orange-800">
+              Terms
+            </a>{" "}
+            and{" "}
+            <a href="#" className="text-orange-600 hover:text-orange-800">
+              Privacy Policy
+            </a>
+          </label>
+        </div>
+
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-orange-500 text-white font-semibold rounded shadow hover:bg-black hover:text-orange-400 transition border border-orange-300"
+          className="w-full py-2 px-4 bg-orange-500 text-white font-medium rounded hover:bg-orange-600 transition focus:outline-none focus:ring-1 focus:ring-orange-500 focus:ring-offset-1"
         >
-          Sign Up
+          Create Account
         </button>
       </form>
-      <div className="mt-6 text-center">
-        <span className="text-sm text-neutral-700">
-          Already have an account?
-        </span>
+
+      <div className="mt-6 text-center text-sm">
+        <span className="text-gray-600">Already have an account?</span>
         <a
           href="/sign-in"
-          className="ml-2 text-orange-500 font-semibold hover:underline"
+          className="ml-1 text-orange-600 hover:text-orange-800"
         >
           Sign in
         </a>

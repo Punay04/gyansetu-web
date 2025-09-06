@@ -1,3 +1,4 @@
+import { useStore } from "@/zustand/init";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -23,6 +24,15 @@ const SignInBox = () => {
           },
         }
       );
+
+      const data = await response.data;
+
+      useStore.getState().setUser({
+        username: data.username,
+        email: data.email,
+        id: data.id,
+      });
+
       console.log("Sign-in response:", response.data);
       toast.success(`${response.data.message}`);
       router.push("/dashboard");
@@ -34,65 +44,110 @@ const SignInBox = () => {
   };
 
   return (
-    <div className="bg-white w-full max-w-md mx-auto p-8 rounded-lg shadow-lg border border-neutral-200">
-      <div className="mb-4 text-center">
-        <span className="inline-block text-3xl font-extrabold text-black tracking-tight">
+    <div className="bg-white w-full max-w-md mx-auto p-6 rounded shadow">
+      <div className="md:hidden mb-4 text-center">
+        <span className="inline-block text-xl font-bold text-black">
           ज्ञान<span className="text-orange-500">Setu</span>
         </span>
-        <p className="mt-2 text-sm text-black font-medium">
-          Welcome back! Sign in to monitor and empower your students.
-        </p>
       </div>
-      <h2 className="text-xl font-bold text-black mb-6 text-center">
-        Teacher Sign In
-      </h2>
-      <form className="space-y-5" onSubmit={handleSignIn}>
+
+      <h2 className="text-xl font-bold text-gray-900 mb-1">Welcome back</h2>
+      <p className="text-sm text-gray-600 mb-6">Sign in to continue</p>
+
+      <form className="space-y-4" onSubmit={handleSignIn}>
         <div>
           <label
-            className="block text-sm font-medium text-black mb-1"
+            className="block text-sm font-medium text-gray-700 mb-1"
             htmlFor="email"
           >
             Email
           </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="w-full px-4 py-2 border border-neutral-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-gray-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </svg>
+            </div>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="teacher@example.com"
+              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-orange-500"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
         </div>
+
         <div>
-          <label
-            className="block text-sm font-medium text-black mb-1"
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className="w-full px-4 py-2 border border-neutral-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="flex justify-between items-center mb-1">
+            <label
+              className="block text-sm font-medium text-gray-700"
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <a
+              href="#"
+              className="text-xs text-orange-600 hover:text-orange-800"
+            >
+              Forgot?
+            </a>
+          </div>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-gray-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-orange-500"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
         </div>
+
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-orange-500 text-white font-semibold rounded shadow hover:bg-black hover:text-orange-400 transition border border-orange-300"
+          className="w-full py-2 px-4 bg-orange-500 text-white font-medium rounded hover:bg-orange-600 transition focus:outline-none focus:ring-1 focus:ring-orange-500 focus:ring-offset-1"
         >
           Sign In
         </button>
       </form>
-      <div className="mt-6 text-center">
-        <span className="text-sm text-neutral-700">Don't have an account?</span>
+
+      <div className="mt-6 text-center text-sm">
+        <span className="text-gray-600">Don't have an account?</span>
         <a
           href="/sign-up"
-          className="ml-2 text-orange-500 font-semibold hover:underline"
+          className="ml-1 text-orange-600 hover:text-orange-800"
         >
-          Sign up
+          Create account
         </a>
       </div>
     </div>

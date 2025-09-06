@@ -1,6 +1,7 @@
 import { prisma } from "@/prisma/init";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { useStore } from "zustand";
 
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
@@ -25,7 +26,14 @@ export async function POST(req: NextRequest) {
       });
 
       const res = NextResponse.json(
-        { message: "Login successful" },
+        {
+          message: "Login successful",
+          data: {
+            username: teacher.name,
+            email: teacher.email,
+            id: teacher.id,
+          },
+        },
         { status: 200 }
       );
 
