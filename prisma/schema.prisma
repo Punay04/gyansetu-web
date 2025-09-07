@@ -9,25 +9,39 @@ datasource db {
 }
 
 model Teacher {
+  id          String      @id @default(uuid())
+  name        String
+  email       String      @unique
+  password    String
+  classes     Class[]
+  students    Student[]
+  alerts      Alert[]     // opposite relation for Alert.teacher
+  createdAt   DateTime    @default(now())
+}
+
+model Class {
   id        String     @id @default(uuid())
-  name      String
-  email     String     @unique
-  password  String
+  section  String     // e.g. "A", "B"
+  grade     String     // e.g. "10th", "9th"
+  teacher   Teacher    @relation(fields: [teacherId], references: [id])
+  teacherId String
   students  Student[]
   createdAt DateTime   @default(now())
 }
 
 model Student {
-  id        String       @id @default(uuid())
-  name      String
-  email     String       @unique
-  password  String
-  class    String
-  teacher   Teacher      @relation(fields: [teacherId], references: [id])
-  teacherId String
-  analytics Analytics[]
-  achievements Achievement[]
-  createdAt DateTime     @default(now())
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  class         Class?         @relation(fields: [classId], references: [id])
+  classId       String?
+  teacher       Teacher        @relation(fields: [teacherId], references: [id])
+  teacherId     String
+  analytics     Analytics[]
+  achievements  Achievement[]
+  parentContact String?        // for parent connect (phone/email)
+  createdAt     DateTime       @default(now())
 }
 
 model Analytics {
@@ -45,6 +59,15 @@ model Achievement {
   id        String   @id @default(uuid())
   student   Student  @relation(fields: [studentId], references: [id])
   studentId String
-  badge     String   
+  badge     String   // e.g. "Star of the Week"
   awardedAt DateTime @default(now())
+}
+
+model Alert {
+  id        String   @id @default(uuid())
+  teacher   Teacher  @relation(fields: [teacherId], references: [id])
+  teacherId String
+  message   String   // e.g. "5 students haven't logged in for 3 days"
+  severity  String   // low / medium / high
+  createdAt DateTime @default(now())
 }

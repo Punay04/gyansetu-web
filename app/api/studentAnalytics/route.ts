@@ -17,7 +17,12 @@ export async function POST(req: NextRequest) {
         id: true,
         name: true,
         email: true,
-        class: true,
+        class: {
+          select: {
+            section: true,
+            grade: true,
+          },
+        },
         analytics: true,
         achievements: true,
       },

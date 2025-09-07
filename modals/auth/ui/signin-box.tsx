@@ -28,12 +28,12 @@ const SignInBox = () => {
       const data = await response.data;
 
       useStore.getState().setUser({
-        username: data.username,
-        email: data.email,
-        id: data.id,
+        username: data.data.username,
+        email: data.data.email,
+        id: data.data.id,
       });
 
-      console.log("Sign-in response:", response.data);
+      console.log("Signed in username:", data.data.username);
       toast.success(`${response.data.message}`);
       router.push("/dashboard");
     } catch (error: any) {

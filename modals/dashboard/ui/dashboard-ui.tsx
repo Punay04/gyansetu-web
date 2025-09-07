@@ -12,11 +12,13 @@ const DashboardUi = () => {
     string | number
   >("Loading...");
 
+  const id = useStore((state) => state.id);
+
   useEffect(() => {
     const totalStudents = async () => {
       try {
         const response = await axios.post("/api/studentsList", {
-          teacherId: "ad39727c-8c2c-4057-8dc2-74939a7496cf",
+          teacherId: id,
         });
         const data = response.data;
         setTotalStudentsCount(data.length);
@@ -25,10 +27,8 @@ const DashboardUi = () => {
       }
     };
 
-    setTimeout(() => {
-      totalStudents();
-    }, 3000);
-  }, []);
+    totalStudents();
+  }, [id]);
 
   const [recentActivities, setRecentActivities] = React.useState<string[]>([]);
 
@@ -50,40 +50,44 @@ const DashboardUi = () => {
     const fetchTopStudents = async () => {
       try {
         const response = await axios.post("/api/topStudents", {
-          teacherId: "ad39727c-8c2c-4057-8dc2-74939a7496cf",
+          teacherId: id,
         });
         const data = response.data.map((s: any) => ({
           name: s.name,
           points: s.analytics?.[0]?.points || 0,
         }));
-        setTopStudents(data);
+
+        // Sort descending by points
+        data.sort((a: { points: number }, b: { points: number }) => b.points - a.points);
+
+        // Optionally take top 5
+        const top5 = data.slice(0, 5);
+
+        setTopStudents(top5);
       } catch (error) {
         console.error("Error fetching top students:", error);
       }
     };
 
-    setTimeout(() => {
-      fetchTopStudents();
-    }, 3000);
-  }, []);
+    fetchTopStudents();
+  }, [id]);
 
   useEffect(() => {
     const fetchRecentActivities = async () => {
       try {
         const response = await axios.post("/api/recentAchievement", {
-          teacherId: "ad39727c-8c2c-4057-8dc2-74939a7496cf",
+          teacherId: id,
         });
         const data = response.data;
-        setRecentActivities(data);
+        const top5 = data.slice(0, 5);
+        setRecentActivities(top5);
       } catch (error) {
         console.error("Error fetching recent activities:", error);
       }
     };
 
-    setTimeout(() => {
-      fetchRecentActivities();
-    }, 3000);
-  }, []);
+    fetchRecentActivities();
+  }, [id]);
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">

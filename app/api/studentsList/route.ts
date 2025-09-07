@@ -2,7 +2,10 @@ import { prisma } from "@/prisma/init";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { teacherId } = await req.json();
+  const body = await req.json();
+  console.log("Request body:", body); // <-- check what is actually coming
+
+  const teacherId = body.teacherId; //
 
   if (!teacherId) {
     return NextResponse.json(
@@ -16,6 +19,12 @@ export async function POST(req: NextRequest) {
       where: { teacherId: teacherId },
       include: {
         analytics: true,
+        class: {
+          select: {
+            section: true,
+            grade: true,
+          },
+        },
         achievements: true,
       },
     });

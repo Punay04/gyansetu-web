@@ -110,8 +110,8 @@ const DashboardSidebar = () => {
           className={`
             ${
               isMobile
-                ? "w-[250px] absolute top-0 left-0"
-                : "min-w-[220px] w-[220px]"
+                ? "w-[300px] absolute top-0 left-0"
+                : "min-w-[260px] w-[260px]"
             } 
             bg-white border-r border-gray-200 flex flex-col h-screen z-50
             transition-all duration-200
@@ -153,7 +153,7 @@ const DashboardSidebar = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => router.push("/dashboard")}
-                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm rounded transition-colors ${
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-md rounded transition-colors  ${
                     pathname === "/dashboard"
                       ? "bg-gray-100 text-gray-900"
                       : "text-gray-700 hover:bg-gray-50"
@@ -170,7 +170,7 @@ const DashboardSidebar = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => router.push("/dashboard/students")}
-                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm rounded transition-colors ${
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-md rounded transition-colors   ${
                     pathname === "/dashboard/students"
                       ? "bg-gray-100 text-gray-900"
                       : "text-gray-700 hover:bg-gray-50"
@@ -183,44 +183,11 @@ const DashboardSidebar = () => {
                   )}
                 </SidebarMenuButton>
               </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={() => router.push("/dashboard/analytics")}
-                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm rounded transition-colors ${
-                    pathname === "/dashboard/analytics"
-                      ? "bg-gray-100 text-gray-900"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  <BarChart2 size={16} className="text-gray-500" />
-                  <span>Analytics</span>
-                  {pathname === "/dashboard/analytics" && (
-                    <div className="ml-auto w-1 h-4 bg-orange-500 rounded-full"></div>
-                  )}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={() => router.push("/dashboard/settings")}
-                  className={`flex items-center gap-2 w-full px-3 py-2 text-sm rounded transition-colors ${
-                    pathname === "/dashboard/settings"
-                      ? "bg-gray-100 text-gray-900"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  <Settings size={16} className="text-gray-500" />
-                  <span>Settings</span>
-                  {pathname === "/dashboard/settings" && (
-                    <div className="ml-auto w-1 h-4 bg-orange-500 rounded-full"></div>
-                  )}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
 
           <SidebarFooter className="mt-auto px-3 py-4 border-t">
+            <p>Username : {username}</p>
             <button
               onClick={handleLogout}
               className="flex items-center justify-center gap-2 w-full py-2 bg-orange-500 text-white text-sm rounded hover:bg-orange-600 transition-colors"

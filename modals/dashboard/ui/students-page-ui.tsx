@@ -1,5 +1,7 @@
 "use client";
+import { useStore } from "@/zustand/init";
 import axios from "axios";
+import { se } from "date-fns/locale";
 import { SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -8,7 +10,10 @@ interface Student {
   id: string;
   name: string;
   email: string;
-  class: string;
+  class: {
+    section: string;
+    grade: string;
+  };
   analytics: {
     progress: number;
     points: number;
@@ -22,20 +27,29 @@ interface Student {
 const StudentsPageUi = () => {
   const [students, setStudents] = React.useState<Student[]>([]);
   const [viewStudents, setViewStudents] = React.useState<Student[]>([]);
+  const [classes, setClasses] = React.useState<string[]>([]);
+  const [selectedClass, setSelectedClass] = React.useState<string>("");
+  const [sections, setSections] = React.useState<string[]>([]);
+  const [selectedSection, setSelectedSection] = React.useState<string>("");
 
   const router = useRouter();
+
+  const id = useStore((state) => state.id);
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const response = await axios.post("/api/studentsList", {
-          teacherId: "ad39727c-8c2c-4057-8dc2-74939a7496cf",
+          teacherId: id,
         });
         const data = response.data.map((s: any) => ({
           id: s.id,
           name: s.name,
           email: s.email,
-          class: s.class,
+          class: {
+            section: s.class?.section || "N/A",
+            grade: s.class?.grade || "N/A",
+          },
           analytics: {
             progress: s.analytics?.[0]?.progress || 0,
             points: s.analytics?.[0]?.points || 0,
@@ -47,16 +61,25 @@ const StudentsPageUi = () => {
         }));
         setStudents(data);
         setViewStudents(data);
+        setClasses(
+          Array.from(
+            new Set(data.map((s: any) => s.class.section))
+          ).sort() as string[]
+        );
+        setSelectedClass("All Classes");
+        setSections(
+          Array.from(
+            new Set(data.map((s: any) => s.class.grade))
+          ).sort() as string[]
+        );
+        setSelectedSection("All Sections");
       } catch (error) {
         console.error("Error fetching students:", error);
       }
     };
 
-    setTimeout(() => {
-      fetchStudents();
-    }, 3000);
-    // fetchStudents();
-  }, []);
+    fetchStudents();
+  }, [id]);
 
   return (
     <div className="p-6 space-y-5 bg-gray-50 min-h-screen">
@@ -91,9 +114,57 @@ const StudentsPageUi = () => {
                 <SearchIcon size={20} />
               </div>
             </div>
-            <button className="py-2 px-4 bg-orange-500 text-white font-medium rounded hover:bg-orange-600 transition">
-              Add Student
-            </button>
+            <select
+              value={selectedClass}
+              className="pl-9 pr-3 py-2 border border-gray-200 rounded w-full sm:w-56 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              onChange={(e) => {
+                const value = e.target.value;
+                setSelectedClass(e.target.value);
+                setViewStudents(
+                  students.filter((s) => s.class.section === e.target.value)
+                );
+
+                if (value === "All Sections") {
+                  setViewStudents(students);
+                } else {
+                  setViewStudents(
+                    students.filter((s) => s.class.section === value)
+                  );
+                }
+              }}
+            >
+              <option value="All Sections">All Sections</option>
+              {classes.map((cls) => (
+                <option key={cls} value={cls}>
+                  {cls}
+                </option>
+              ))}
+            </select>
+            <select
+              value={selectedSection}
+              className="pl-9 pr-3 py-2 border border-gray-200 rounded w-full sm:w-56 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              onChange={(e) => {
+                const value = e.target.value;
+                setSelectedSection(e.target.value);
+                setViewStudents(
+                  students.filter((s) => s.class.grade === e.target.value)
+                );
+                if (value === "All Classes") {
+                  setViewStudents(students);
+                } else {
+                  setViewStudents(
+                    students.filter((s) => s.class.grade === value)
+                  );
+                }
+              }}
+            >
+              <option value="All Classes">All Classes</option>
+              {sections.map((sec) => (
+                <option key={sec} value={sec}>
+                  {sec}
+                </option>
+              ))}
+            </select>
           </div>
         </header>
 
@@ -148,7 +219,8 @@ const StudentsPageUi = () => {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-700">
-                      {s.class}
+                      {s.class.grade}
+                      {s.class.section}
                     </td>
                     <td className="px-4 py-3">
                       <div className="w-32 bg-gray-200 rounded-full h-2">

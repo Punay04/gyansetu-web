@@ -2,7 +2,10 @@ import { prisma } from "@/prisma/init";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { teacherId } = await req.json();
+  const body = await req.json();
+  console.log("Request body:", body); // <-- check what is actually coming
+
+  const teacherId = body.teacherId; //
 
   if (!teacherId) {
     return new Response(JSON.stringify({ message: "Teacher ID is required" }), {
@@ -20,10 +23,10 @@ export async function POST(req: NextRequest) {
             name: true,
             email: true,
             class: true,
-            analytics:{
+            analytics: {
               select: {
                 points: true,
-              }
+              },
             },
             achievements: true,
           },
