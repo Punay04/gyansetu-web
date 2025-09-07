@@ -20,6 +20,7 @@ import {
   Settings,
   LogOut,
   ChevronRight,
+  Copy,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import axios from "axios";
@@ -33,6 +34,7 @@ const DashboardSidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const username = useStore((state) => state.username);
+  const id = useStore((state) => state.id);
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
@@ -75,7 +77,7 @@ const DashboardSidebar = () => {
       {isMobile && (
         <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3 bg-white border-b shadow-sm">
           <span className="text-xl font-bold text-black">
-            ज्ञान<span className="text-orange-500">Setu</span>
+            ज्ञान<span className="text-orange-500 text-xl">Setu</span>
           </span>
           <button
             className="p-1 rounded hover:bg-gray-100"
@@ -119,7 +121,7 @@ const DashboardSidebar = () => {
         >
           <SidebarHeader>
             <div className="flex items-center justify-between px-4 py-4 border-b">
-              <span className="text-lg font-bold text-black">
+              <span className="text-3xl font-bold text-black">
                 ज्ञान<span className="text-orange-500">Setu</span>
               </span>
               {isMobile && (
@@ -139,7 +141,7 @@ const DashboardSidebar = () => {
                   {username ? username.charAt(0).toUpperCase() : "T"}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-xl font-medium text-gray-900">
                     {username || "Teacher"}
                   </p>
                   <p className="text-xs text-gray-500">Teacher</p>
@@ -187,10 +189,25 @@ const DashboardSidebar = () => {
           </SidebarContent>
 
           <SidebarFooter className="mt-auto px-3 py-4 border-t">
-            <p>Username : {username}</p>
+            <p className="mb-3 flex items-center gap-2">
+              TeacherId :{" "}
+              <span className="text-orange-500 font-mono">
+                {id.length > 6 ? `${id.substring(0, 7)}...` : id}
+              </span>
+              <button>
+                <Copy
+                  size={20}
+                  className="text-gray-500 cursor-pointer"
+                  onClick={() => {
+                    navigator.clipboard.writeText(id);
+                    toast.success("Teacher ID copied to clipboard");
+                  }}
+                />
+              </button>
+            </p>
             <button
               onClick={handleLogout}
-              className="flex items-center justify-center gap-2 w-full py-2 bg-orange-500 text-white text-sm rounded hover:bg-orange-600 transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-2 bg-orange-500 text-white text-sm rounded hover:bg-orange-400 transition-colors cursor-pointer"
             >
               <LogOut size={16} />
               <span>Logout</span>
