@@ -75,10 +75,10 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
       <div>
         <Dialog open={isOpen} onOpenChange={setIsopen}>
-          <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-white p-0 rounded-lg shadow-lg border-t-4 border-t-orange-500 overflow-hidden">
+          <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-white p-0 rounded-lg shadow-lg border-t-4 border-t-blue-500 overflow-hidden">
             <div className="p-8">
               <DialogTitle className="text-2xl font-medium text-gray-800 mb-8 flex items-center">
-                <Target className="h-6 w-6 text-orange-500 mr-3" />
+                <Target className="h-6 w-6 text-blue-500 mr-3" />
                 AI Analysis
               </DialogTitle>
 
@@ -107,7 +107,7 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
             {/* Student Profile */}
             <div className="bg-white p-6 rounded-lg shadow-sm mb-6 flex justify-between">
               <div className="flex items-center ">
-                <div className="h-16 w-16 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 text-xl font-bold">
+                <div className="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xl font-bold">
                   {studentData.name.charAt(0)}
                 </div>
                 <div className="ml-4">
@@ -146,12 +146,10 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
                   }}
                 >
                   {!isAnalyzing && (
-                    <Target
-                      className={cn("h-4 w-4 mr-2 text-orange-500", {})}
-                    />
+                    <Target className={cn("h-4 w-4 mr-2 text-blue-500", {})} />
                   )}
                   {isAnalyzing && (
-                    <Loader className="h-4 w-4 mr-2 text-orange-500 animate-spin" />
+                    <Loader className="h-4 w-4 mr-2 text-blue-500 animate-spin" />
                   )}
                   AI Analysis
                 </button>
@@ -179,13 +177,13 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
                       {analytics.progress}%
                     </p>
                   </div>
-                  <div className="p-2 bg-orange-100 rounded-full text-orange-600">
+                  <div className="p-2 bg-blue-100 rounded-full text-blue-600">
                     <Target className="h-5 w-5" />
                   </div>
                 </div>
                 <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
                   <div
-                    className="h-2 bg-orange-500 rounded-full"
+                    className="h-2 bg-blue-500 rounded-full"
                     style={{ width: `${analytics.progress}%` }}
                   />
                 </div>
@@ -199,7 +197,7 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
                       {analytics.points}
                     </p>
                   </div>
-                  <div className="p-2 bg-orange-100 rounded-full text-orange-600">
+                  <div className="p-2 bg-blue-100 rounded-full text-blue-600">
                     <TrendingUp className="h-5 w-5" />
                   </div>
                 </div>
@@ -213,7 +211,7 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
                       {analytics.streak} days
                     </p>
                   </div>
-                  <div className="p-2 bg-orange-100 rounded-full text-orange-600">
+                  <div className="p-2 bg-blue-100 rounded-full text-blue-600">
                     <Calendar className="h-5 w-5" />
                   </div>
                 </div>
@@ -231,7 +229,7 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
                       key={index}
                       className="flex items-center bg-gray-50 p-3 rounded-lg"
                     >
-                      <div className="p-2 bg-orange-100 rounded-full text-orange-600 mr-3">
+                      <div className="p-2 bg-blue-100 rounded-full text-blue-600 mr-3">
                         <Award className="h-4 w-4" />
                       </div>
                       <div>

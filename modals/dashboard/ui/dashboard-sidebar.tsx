@@ -21,6 +21,7 @@ import {
   LogOut,
   ChevronRight,
   Copy,
+  TrophyIcon,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import axios from "axios";
@@ -77,7 +78,7 @@ const DashboardSidebar = () => {
       {isMobile && (
         <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3 bg-white border-b shadow-sm">
           <span className="text-xl font-bold text-black">
-            ज्ञान<span className="text-orange-500 text-xl">Setu</span>
+            ज्ञान<span className="text-blue-500 text-xl">Setu</span>
           </span>
           <button
             className="p-1 rounded hover:bg-gray-100"
@@ -122,7 +123,7 @@ const DashboardSidebar = () => {
           <SidebarHeader>
             <div className="flex items-center justify-between px-4 py-4 border-b">
               <span className="text-3xl font-bold text-black">
-                ज्ञान<span className="text-orange-500">Setu</span>
+                ज्ञान<span className="text-blue-500">Setu</span>
               </span>
               {isMobile && (
                 <button
@@ -137,7 +138,7 @@ const DashboardSidebar = () => {
             {/* User profile section */}
             <div className="px-4 py-3 border-b">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-medium">
+                <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">
                   {username ? username.charAt(0).toUpperCase() : "T"}
                 </div>
                 <div>
@@ -164,7 +165,7 @@ const DashboardSidebar = () => {
                   <Home size={16} className="text-gray-500" />
                   <span>Dashboard</span>
                   {pathname === "/dashboard" && (
-                    <div className="ml-auto w-1 h-4 bg-orange-500 rounded-full"></div>
+                    <div className="ml-auto w-1 h-4 bg-blue-500 rounded-full"></div>
                   )}
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -181,7 +182,23 @@ const DashboardSidebar = () => {
                   <Users size={16} className="text-gray-500" />
                   <span>Students</span>
                   {pathname === "/dashboard/students" && (
-                    <div className="ml-auto w-1 h-4 bg-orange-500 rounded-full"></div>
+                    <div className="ml-auto w-1 h-4 bg-blue-500 rounded-full"></div>
+                  )}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => router.push("/dashboard/quiz")}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-md rounded transition-colors   ${
+                    pathname === "/quiz"
+                      ? "bg-gray-100 text-gray-900"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  <TrophyIcon size={16} className="text-gray-500" />
+                  <span>Quiz</span>
+                  {pathname === "/dashboard/quiz" && (
+                    <div className="ml-auto w-1 h-4 bg-blue-500 rounded-full"></div>
                   )}
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -191,7 +208,7 @@ const DashboardSidebar = () => {
           <SidebarFooter className="mt-auto px-3 py-4 border-t">
             <p className="mb-3 flex items-center gap-2">
               TeacherId :{" "}
-              <span className="text-orange-500 font-mono">
+              <span className="text-blue-500 font-mono">
                 {id.length > 6 ? `${id.substring(0, 7)}...` : id}
               </span>
               <button>
@@ -207,7 +224,7 @@ const DashboardSidebar = () => {
             </p>
             <button
               onClick={handleLogout}
-              className="flex items-center justify-center gap-2 w-full py-2 bg-orange-500 text-white text-sm rounded hover:bg-orange-400 transition-colors cursor-pointer"
+              className="flex items-center justify-center gap-2 w-full py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-400 transition-colors cursor-pointer"
             >
               <LogOut size={16} />
               <span>Logout</span>

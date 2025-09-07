@@ -16,6 +16,7 @@ model Teacher {
   classes     Class[]
   students    Student[]
   alerts      Alert[]     // opposite relation for Alert.teacher
+  quizzes     Quiz[]
   createdAt   DateTime    @default(now())
 }
 
@@ -41,6 +42,7 @@ model Student {
   analytics     Analytics[]
   achievements  Achievement[]
   parentContact String?        // for parent connect (phone/email)
+  quizAttempts  QuizAttempt[]
   createdAt     DateTime       @default(now())
 }
 
@@ -61,6 +63,39 @@ model Achievement {
   studentId String
   badge     String   // e.g. "Star of the Week"
   awardedAt DateTime @default(now())
+}
+
+model Quiz {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  teacherId  String
+  subject     String
+  grade       String
+  teacher    Teacher  @relation(fields: [teacherId], references: [id])
+  attempts    QuizAttempt[]
+  createdAt   DateTime @default(now())
+  questions   Question[]
+}
+
+model Question {
+  id          String   @id @default(uuid())
+  question    String
+  answer      String
+  quiz        Quiz     @relation(fields: [quizId], references: [id])
+  quizId      String
+  options     String[] // Array of options for multiple-choice questions
+  createdAt   DateTime @default(now())
+}
+
+model QuizAttempt {
+  id         String   @id @default(uuid())
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+  quizId     String
+  student    Student  @relation(fields: [studentId], references: [id])
+  studentId  String
+  score      Int
+  takenAt    DateTime @default(now())
 }
 
 model Alert {

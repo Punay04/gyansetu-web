@@ -41,7 +41,7 @@ const SignupBox = () => {
     <div className="bg-white w-full max-w-md mx-auto p-6 rounded shadow">
       <div className="md:hidden mb-4 text-center">
         <span className="inline-block text-xl font-bold text-black">
-          ज्ञान<span className="text-orange-500">Setu</span>
+          ज्ञान<span className="text-blue-500">Setu</span>
         </span>
       </div>
 
@@ -79,7 +79,7 @@ const SignupBox = () => {
               id="name"
               name="name"
               placeholder="Reena Sharma"
-              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-orange-500"
+              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               onChange={(e) => setName(e.target.value)}
             />
@@ -114,7 +114,7 @@ const SignupBox = () => {
               id="email"
               name="email"
               placeholder="teacher@example.com"
-              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-orange-500"
+              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -149,7 +149,7 @@ const SignupBox = () => {
               id="password"
               name="password"
               placeholder="••••••••"
-              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-orange-500"
+              className="w-full pl-9 px-3 py-2 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -162,16 +162,16 @@ const SignupBox = () => {
             id="terms"
             name="terms"
             type="checkbox"
-            className="h-3.5 w-3.5 border-gray-300 rounded text-orange-500 focus:ring-orange-500"
+            className="h-3.5 w-3.5 border-gray-300 rounded text-blue-500 focus:ring-blue-500"
             required
           />
           <label htmlFor="terms" className="ml-2 block text-xs text-gray-600">
             I agree to the{" "}
-            <a href="#" className="text-orange-600 hover:text-orange-800">
+            <a href="#" className="text-blue-600 hover:text-blue-800">
               Terms
             </a>{" "}
             and{" "}
-            <a href="#" className="text-orange-600 hover:text-orange-800">
+            <a href="#" className="text-blue-600 hover:text-blue-800">
               Privacy Policy
             </a>
           </label>
@@ -179,7 +179,7 @@ const SignupBox = () => {
 
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-orange-500 text-white font-medium rounded hover:bg-orange-600 transition focus:outline-none focus:ring-1 focus:ring-orange-500 focus:ring-offset-1"
+          className="w-full py-2 px-4 bg-blue-500 text-white font-medium rounded hover:bg-blue-600 transition focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-1"
         >
           Create Account
         </button>
@@ -187,10 +187,7 @@ const SignupBox = () => {
 
       <div className="mt-6 text-center text-sm">
         <span className="text-gray-600">Already have an account?</span>
-        <a
-          href="/sign-in"
-          className="ml-1 text-orange-600 hover:text-orange-800"
-        >
+        <a href="/sign-in" className="ml-1 text-blue-600 hover:text-blue-800">
           Sign in
         </a>
       </div>

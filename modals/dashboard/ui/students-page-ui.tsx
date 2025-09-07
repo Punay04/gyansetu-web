@@ -96,7 +96,7 @@ const StudentsPageUi = () => {
             <div className="relative">
               <input
                 placeholder="Search student..."
-                className="pl-9 pr-3 py-2 border border-gray-200 rounded w-full sm:w-56 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                className="pl-9 pr-3 py-2 border border-gray-200 rounded w-full sm:w-56 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 onChange={(e) => {
                   const query = e.target.value.toLowerCase();
                   if (query === "") {
@@ -116,7 +116,7 @@ const StudentsPageUi = () => {
             </div>
             <select
               value={selectedClass}
-              className="pl-9 pr-3 py-2 border border-gray-200 rounded w-full sm:w-56 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              className="pl-9 pr-3 py-2 border border-gray-200 rounded w-full sm:w-56 focus:outline-none focus:ring-1 focus:ring-blue-500"
               onChange={(e) => {
                 const value = e.target.value;
                 setSelectedClass(e.target.value);
@@ -142,7 +142,7 @@ const StudentsPageUi = () => {
             </select>
             <select
               value={selectedSection}
-              className="pl-9 pr-3 py-2 border border-gray-200 rounded w-full sm:w-56 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              className="pl-9 pr-3 py-2 border border-gray-200 rounded w-full sm:w-56 focus:outline-none focus:ring-1 focus:ring-blue-500"
               onChange={(e) => {
                 const value = e.target.value;
                 setSelectedSection(e.target.value);
@@ -209,7 +209,7 @@ const StudentsPageUi = () => {
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-8 w-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-medium">
+                        <div className="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-medium">
                           {s.name.split(" ")[0][0]}
                         </div>
                         <div className="ml-3">
@@ -225,7 +225,7 @@ const StudentsPageUi = () => {
                     <td className="px-4 py-3">
                       <div className="w-32 bg-gray-200 rounded-full h-2">
                         <div
-                          className="h-2 bg-orange-500 rounded-full"
+                          className="h-2 bg-blue-500 rounded-full"
                           style={{ width: `${s.analytics.progress}%` }}
                         />
                       </div>
@@ -243,7 +243,7 @@ const StudentsPageUi = () => {
                         {s.achievements.badges.map((badge) => (
                           <span
                             key={badge}
-                            className="inline-block bg-orange-100 text-orange-600 rounded-full px-2 py-1 text-xs font-medium mr-1"
+                            className="inline-block bg-blue-100 text-blue-600 rounded-full px-2 py-1 text-xs font-medium mr-1"
                           >
                             {badge}
                           </span>
