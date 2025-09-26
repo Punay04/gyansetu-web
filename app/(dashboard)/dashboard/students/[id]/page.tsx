@@ -2,24 +2,24 @@ import StudentAnalyticsPage from "@/modals/dashboard/views/students-analytics-pa
 import React from "react";
 import { Metadata } from "next";
 
-interface PageProps {
+type StudentPageParams = {
   params: {
     id: string;
   };
-  searchParams: Record<string, string | string[] | undefined>;
-}
+};
 
-export const generateMetadata = ({ params }: PageProps): Metadata => {
+export async function generateMetadata({
+  params,
+}: StudentPageParams): Promise<Metadata> {
   return {
     title: `Student ${params.id} - Analytics`,
   };
-};
+}
 
-export default function Page({ params }: PageProps) {
-  const id = params.id;
+export default function Page({ params }: { params: { id: string } }) {
   return (
     <div>
-      <StudentAnalyticsPage id={id} />
+      <StudentAnalyticsPage id={params.id} />
     </div>
   );
 }
