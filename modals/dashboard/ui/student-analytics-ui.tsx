@@ -395,7 +395,7 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
                   }}
                 >
                   {!isAnalyzing && (
-                    <Target className={cn("h-4 w-4 mr-2 text-blue-500", {})} />
+                    <Target className="h-4 w-4 mr-2 text-blue-500" />
                   )}
                   {isAnalyzing && (
                     <Loader className="h-4 w-4 mr-2 text-blue-500 animate-spin" />
