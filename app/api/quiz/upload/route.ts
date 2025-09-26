@@ -25,27 +25,27 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // const newQuiz = await prisma.quiz.create({
-    //   data: {
-    //     teacherId: existingTeacher.id,
-    //     title,
-    //     grade,
-    //     subject,
-    //   },
-    // });
+    const newQuiz = await prisma.quiz.create({
+      data: {
+        teacherId: existingTeacher.id,
+        title,
+        grade,
+        subject,
+      },
+    });
 
-    // for (const item of quiz) {
-    //   await prisma.question.create({
-    //     data: {
-    //       question: item.question,
-    //       answer: item.answer,
-    //       options: {
-    //         set: item.options,
-    //       },
-    //       quizId: newQuiz.id,
-    //     },
-    //   });
-    // }
+    for (const item of quiz) {
+      await prisma.question.create({
+        data: {
+          question: item.question,
+          answer: item.answer,
+          options: {
+            set: item.options,
+          },
+          quizId: newQuiz.id,
+        },
+      });
+    }
     return NextResponse.json({ message: "Quiz uploaded successfully" });
   } catch (error) {
     console.error("Error uploading quiz:", error);
