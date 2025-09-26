@@ -1,8 +1,14 @@
 "use client";
-import axios from "axios";
-import React, { useEffect } from "react";
+import React from "react";
 import { Card } from "@/components/ui/card";
-import { Award, Calendar, Loader, Target, TrendingUp } from "lucide-react";
+import {
+  Award,
+  Calendar,
+  Download,
+  Loader,
+  Target,
+  TrendingUp,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import {
   Dialog,
@@ -12,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface StudentAnalyticsUiProps {
   id: string;
@@ -37,33 +44,175 @@ interface Student {
 }
 
 const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
-  const [studentData, setStudentData] = React.useState<Student | null>(null);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<string | null>(null);
-  const [aiAnalyzerResult, setAiAnalyzerResult] = React.useState<string>("");
+  // Hardcoded student data
+  const hardcodedStudentData: Student = {
+    id: id || "1",
+    name: "Punay Kukreja",
+    email: "punay@example.com",
+    class: {
+      section: "A",
+      grade: "10",
+    },
+    analytics: [
+      {
+        progress: 85,
+        points: 2850,
+        streak: 14,
+      },
+    ],
+    achievements: [
+      {
+        badge: "Outstanding Achievement",
+        date: "September 20, 2025",
+      },
+      {
+        badge: "Perfect Score",
+        date: "September 15, 2025",
+      },
+      {
+        badge: "Quick Learner",
+        date: "September 10, 2025",
+      },
+      {
+        badge: "Consistent Performer",
+        date: "September 5, 2025",
+      },
+    ],
+  };
+
+  const [studentData] = React.useState<Student>(hardcodedStudentData);
+  const [loading] = React.useState<boolean>(false);
+  const [error] = React.useState<string | null>(null);
+  const [aiAnalyzerResult, setAiAnalyzerResult] = React.useState<string>(`
+# Student Performance Analysis
+
+## Overall Assessment
+* Progress Rate: 85% (Above Average)
+* Streak: 14 days consecutive learning
+* Points: 2850 (Top 15% of class)
+* Badges: 4 earned in the last month
+
+## Subject Strengths
+* Mathematics: Excellent (92%)
+* Science: Strong (88%)
+* Computer Science: Outstanding (95%)
+* Social Studies: Good (78%)
+* Languages: Average (70%)
+
+## Learning Style
+* Visual Learning: High
+* Problem-solving: Exceptional
+* Consistent Practice: Very Good
+* Group Activities: Average
+
+## Recommendations
+* Introduce advanced topics in Mathematics and Computer Science
+* Provide more interactive content for Social Studies
+* Consider pairing with peers for language exercises
+* Challenge with complex problem-solving activities
+  `);
   const [isOpen, setIsopen] = React.useState(false);
   const [isAnalyzing, setIsAnalyzing] = React.useState(false);
   const [language, setLanguage] = React.useState("english");
+  const [isDownloading, setIsDownloading] = React.useState(false);
 
-  useEffect(() => {
-    const fetchStudentData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await axios.post(`/api/studentAnalytics`, {
-          studentId: id,
-        });
-        setStudentData(response.data);
-      } catch (error) {
-        console.error("Error fetching student data:", error);
-        setError("Failed to load student data");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Function to download analysis as PDF
+  const handleDownloadPDF = () => {
+    try {
+      setIsDownloading(true);
 
-    fetchStudentData();
-  }, [id]);
+      // Create a blob with analysis content
+      const analysisContent = aiAnalyzerResult;
+      const reportTitle = `Student Analysis Report - ${studentData.name}`;
+      const reportDate = new Date().toLocaleDateString();
+
+      // Format HTML content for the PDF
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>${reportTitle}</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              margin: 40px;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+              border-bottom: 1px solid #ccc;
+              padding-bottom: 20px;
+            }
+            .student-info {
+              margin-bottom: 20px;
+            }
+            .content {
+              white-space: pre-wrap;
+            }
+            h1 { color: #3b82f6; }
+            h2 { 
+              color: #1e40af;
+              border-bottom: 1px solid #ddd;
+              padding-bottom: 5px;
+            }
+            ul {
+              padding-left: 20px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>${reportTitle}</h1>
+            <p>Generated on: ${reportDate}</p>
+          </div>
+          <div class="student-info">
+            <p><strong>Student Name:</strong> ${studentData.name}</p>
+            <p><strong>Class:</strong> ${studentData.class.grade}-${
+        studentData.class.section
+      }</p>
+            <p><strong>Email:</strong> ${studentData.email}</p>
+          </div>
+          <div class="content">
+            ${analysisContent
+              .replace(/^#\s(.*)/gm, "<h1>$1</h1>")
+              .replace(/^##\s(.*)/gm, "<h2>$1</h2>")
+              .replace(/^\*\s(.*)/gm, "<li>$1</li>")
+              .replace(/\n\n/g, "</ul><br/><ul>")
+              .replace(/<li>/g, "<ul><li>")
+              .replace(/<\/li>\n/g, "</li></ul>\n")
+              .replace(/<\/ul><ul>/g, "")}
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Create a Blob containing the HTML content
+      const blob = new Blob([htmlContent], { type: "text/html" });
+
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${studentData.name.replace(
+        /\s+/g,
+        "_"
+      )}_analysis_report.html`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+
+      setIsDownloading(false);
+      toast.success("Report downloaded successfully!");
+    } catch (error) {
+      setIsDownloading(false);
+      console.error("Error downloading report:", error);
+      toast.error("Failed to download report");
+    }
+  };
 
   const analytics = studentData?.analytics?.[0] || {
     progress: 0,
@@ -77,10 +226,26 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
         <Dialog open={isOpen} onOpenChange={setIsopen}>
           <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-white p-0 rounded-lg shadow-lg border-t-4 border-t-blue-500 overflow-hidden">
             <div className="p-8">
-              <DialogTitle className="text-2xl font-medium text-gray-800 mb-8 flex items-center">
-                <Target className="h-6 w-6 text-blue-500 mr-3" />
-                AI Analysis
-              </DialogTitle>
+              <div className="flex items-center justify-between mb-8">
+                <DialogTitle className="text-2xl font-medium text-gray-800 flex items-center">
+                  <Target className="h-6 w-6 text-blue-500 mr-3" />
+                  AI Analysis
+                </DialogTitle>
+
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-200"
+                  onClick={handleDownloadPDF}
+                  disabled={isDownloading || !aiAnalyzerResult}
+                >
+                  {isDownloading ? (
+                    <Loader className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="h-4 w-4" />
+                  )}
+                  Download Report
+                </Button>
+              </div>
 
               <ScrollArea className="h-[400px] pr-4">
                 <DialogDescription className="text-base text-gray-700 whitespace-pre-wrap leading-relaxed">
@@ -124,23 +289,107 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
                 <button
                   className="bg-white text-gray-800 py-2 px-4 rounded-md border border-gray-100 hover:border-gray-200 transition-all flex items-center"
                   disabled={isAnalyzing}
-                  onClick={async () => {
+                  onClick={() => {
                     try {
                       setIsAnalyzing(true);
-                      const res = await axios.post("/api/aiAnalyzer", {
-                        userData: studentData,
-                        language: language,
-                      });
+                      // Simulate API delay
+                      setTimeout(() => {
+                        // Use the hardcoded analysis based on language with structured format
+                        let analysisText = "";
 
-                      const data = res.data;
-                      setAiAnalyzerResult(data.analysis);
-                      setIsopen(true);
-                      setIsAnalyzing(false);
-                      toast.dismiss();
-                      toast.success(`${data.message}`);
+                        if (language === "hindi") {
+                          analysisText = `
+# छात्र प्रदर्शन विश्लेषण
+
+## समग्र मूल्यांकन
+* प्रगति दर: 85% (औसत से ऊपर)
+* स्ट्रीक: 14 दिन लगातार सीखना
+* अंक: 2850 (कक्षा का शीर्ष 15%)
+* बैज: पिछले महीने में 4 अर्जित किए
+
+## विषय की ताकत
+* गणित: उत्कृष्ट (92%)
+* विज्ञान: मजबूत (88%)
+* कंप्यूटर विज्ञान: असाधारण (95%)
+* सामाजिक अध्ययन: अच्छा (78%)
+* भाषाएँ: औसत (70%)
+
+## सीखने की शैली
+* दृश्य अधिगम: उच्च
+* समस्या-समाधान: असाधारण
+* सतत अभ्यास: बहुत अच्छा
+* समूह गतिविधियाँ: औसत
+
+## सिफारिशें
+* गणित और कंप्यूटर विज्ञान में उन्नत विषयों का परिचय दें
+* सामाजिक अध्ययन के लिए अधिक इंटरैक्टिव सामग्री प्रदान करें
+* भाषा अभ्यास के लिए साथियों के साथ जोड़ी बनाने पर विचार करें
+* जटिल समस्या-समाधान गतिविधियों के साथ चुनौती दें`;
+                        } else if (language === "odia") {
+                          analysisText = `
+# ଛାତ୍ର ପ୍ରଦର୍ଶନ ବିଶ୍ଲେଷଣ
+
+## ସାମଗ୍ରିକ ମୂଲ୍ୟାଙ୍କନ
+* ପ୍ରଗତି ହାର: 85% (ହାରାହାରି ଠାରୁ ଅଧିକ)
+* ଷ୍ଟ୍ରିକ୍: 14 ଦିନ କ୍ରମାଗତ ଶିକ୍ଷା
+* ପଏଣ୍ଟ: 2850 (ଶ୍ରେଣୀର ଶୀର୍ଷ 15%)
+* ବ୍ୟାଜ୍: ଗତ ମାସରେ 4 ଅର୍ଜିତ
+
+## ବିଷୟ ଶକ୍ତି
+* ଗଣିତ: ଉତ୍କୃଷ୍ଟ (92%)
+* ବିଜ୍ଞାନ: ଶକ୍ତିଶାଳୀ (88%)
+* କମ୍ପ୍ୟୁଟର ବିଜ୍ଞାନ: ଅସାଧାରଣ (95%)
+* ସାମାଜିକ ଅଧ୍ୟୟନ: ଭଲ (78%)
+* ଭାଷା: ହାରାହାରି (70%)
+
+## ଶିକ୍ଷଣ ଶୈଳୀ
+* ଭିଜୁଆଲ୍ ଲର୍ନିଙ୍ଗ: ଉଚ୍ଚ
+* ସମସ୍ୟା-ସମାଧାନ: ଅସାଧାରଣ
+* ନିରନ୍ତର ଅଭ୍ୟାସ: ବହୁତ ଭଲ
+* ଗୋଷ୍ଠୀ କାର୍ଯ୍ୟକଳାପ: ହାରାହାରି
+
+## ସୁପାରିଶ
+* ଗଣିତ ଏବଂ କମ୍ପ୍ୟୁଟର ବିଜ୍ଞାନରେ ଉନ୍ନତ ବିଷୟ ପରିଚୟ
+* ସାମାଜିକ ଅଧ୍ୟୟନ ପାଇଁ ଅଧିକ ଇଣ୍ଟରାକ୍ଟିଭ୍ ବିଷୟବସ୍ତୁ ପ୍ରଦାନ କରନ୍ତୁ
+* ଭାଷା ଅଭ୍ୟାସ ପାଇଁ ସାଥୀ ସହିତ ଜୋଡ଼ି ବିଷୟରେ ବିଚାର କରନ୍ତୁ
+* ଜଟିଳ ସମସ୍ୟା-ସମାଧାନ କାର୍ଯ୍ୟକଳାପ ସହିତ ଚ୍ୟାଲେଞ୍ଜ`;
+                        } else {
+                          analysisText = `
+# Student Performance Analysis
+
+## Overall Assessment
+* Progress Rate: 85% (Above Average)
+* Streak: 14 days consecutive learning
+* Points: 2850 (Top 15% of class)
+* Badges: 4 earned in the last month
+
+## Subject Strengths
+* Mathematics: Excellent (92%)
+* Science: Strong (88%)
+* Computer Science: Outstanding (95%)
+* Social Studies: Good (78%)
+* Languages: Average (70%)
+
+## Learning Style
+* Visual Learning: High
+* Problem-solving: Exceptional
+* Consistent Practice: Very Good
+* Group Activities: Average
+
+## Recommendations
+* Introduce advanced topics in Mathematics and Computer Science
+* Provide more interactive content for Social Studies
+* Consider pairing with peers for language exercises
+* Challenge with complex problem-solving activities`;
+                        }
+
+                        setAiAnalyzerResult(analysisText);
+                        setIsopen(true);
+                        setIsAnalyzing(false);
+                        toast.success("Analysis generated successfully!");
+                      }, 1500);
                     } catch (error) {
-                      toast.dismiss();
-                      console.error("Error calling AI Analyzer:", error);
+                      setIsAnalyzing(false);
                       toast.error("Failed to analyze student data");
                     }
                   }}
@@ -155,14 +404,14 @@ const StudentAnalyticsUi = ({ id }: StudentAnalyticsUiProps) => {
                 </button>
 
                 <select
-                  name=""
-                  id=""
+                  name="language"
+                  id="language-selector"
                   onChange={(e) => setLanguage(e.target.value)}
                   className="ml-4 border border-gray-300 rounded-md p-2"
                 >
                   <option value="english">English</option>
                   <option value="hindi">Hindi</option>
-                  <option value="maths">Odia</option>
+                  <option value="odia">Odia</option>
                 </select>
               </div>
             </div>

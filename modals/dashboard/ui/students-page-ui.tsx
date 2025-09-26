@@ -1,7 +1,5 @@
 "use client";
 import { useStore } from "@/zustand/init";
-import axios from "axios";
-import { se } from "date-fns/locale";
 import { SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -25,61 +23,199 @@ interface Student {
 }
 
 const StudentsPageUi = () => {
-  const [students, setStudents] = React.useState<Student[]>([]);
-  const [viewStudents, setViewStudents] = React.useState<Student[]>([]);
-  const [classes, setClasses] = React.useState<string[]>([]);
-  const [selectedClass, setSelectedClass] = React.useState<string>("");
-  const [sections, setSections] = React.useState<string[]>([]);
-  const [selectedSection, setSelectedSection] = React.useState<string>("");
+  // Hardcoded student data
+  const hardcodedStudents: Student[] = [
+    {
+      id: "1",
+      name: "Punay Kukreja",
+      email: "punay@example.com",
+      class: {
+        section: "A",
+        grade: "10",
+      },
+      analytics: {
+        progress: 85,
+        points: 2850,
+        streak: 14,
+      },
+      achievements: {
+        badges: ["Outstanding Achievement", "Perfect Score"],
+      },
+    },
+    {
+      id: "2",
+      name: "Vansh Goel",
+      email: "vansh@example.com",
+      class: {
+        section: "A",
+        grade: "10",
+      },
+      analytics: {
+        progress: 88,
+        points: 2720,
+        streak: 12,
+      },
+      achievements: {
+        badges: ["Quick Learner"],
+      },
+    },
+    {
+      id: "3",
+      name: "Aditya Sharma",
+      email: "aditya@example.com",
+      class: {
+        section: "B",
+        grade: "10",
+      },
+      analytics: {
+        progress: 85,
+        points: 2650,
+        streak: 10,
+      },
+      achievements: {
+        badges: ["Consistent Performer"],
+      },
+    },
+    {
+      id: "4",
+      name: "Priya Patel",
+      email: "priya@example.com",
+      class: {
+        section: "B",
+        grade: "9",
+      },
+      analytics: {
+        progress: 82,
+        points: 2580,
+        streak: 9,
+      },
+      achievements: {
+        badges: ["Problem Solver"],
+      },
+    },
+    {
+      id: "5",
+      name: "Rahul Kumar",
+      email: "rahul@example.com",
+      class: {
+        section: "C",
+        grade: "9",
+      },
+      analytics: {
+        progress: 78,
+        points: 2450,
+        streak: 8,
+      },
+      achievements: {
+        badges: ["Math Whiz"],
+      },
+    },
+    {
+      id: "6",
+      name: "Sneha Singh",
+      email: "sneha@example.com",
+      class: {
+        section: "C",
+        grade: "8",
+      },
+      analytics: {
+        progress: 75,
+        points: 2380,
+        streak: 7,
+      },
+      achievements: {
+        badges: ["Science Explorer"],
+      },
+    },
+    {
+      id: "7",
+      name: "Arjun Mehta",
+      email: "arjun@example.com",
+      class: {
+        section: "A",
+        grade: "8",
+      },
+      analytics: {
+        progress: 72,
+        points: 2320,
+        streak: 6,
+      },
+      achievements: {
+        badges: ["Language Master"],
+      },
+    },
+    {
+      id: "8",
+      name: "Kavya Reddy",
+      email: "kavya@example.com",
+      class: {
+        section: "B",
+        grade: "8",
+      },
+      analytics: {
+        progress: 68,
+        points: 2250,
+        streak: 5,
+      },
+      achievements: {
+        badges: ["History Buff"],
+      },
+    },
+    {
+      id: "9",
+      name: "Vikram Joshi",
+      email: "vikram@example.com",
+      class: {
+        section: "A",
+        grade: "7",
+      },
+      analytics: {
+        progress: 65,
+        points: 2180,
+        streak: 4,
+      },
+      achievements: {
+        badges: ["Art Enthusiast"],
+      },
+    },
+    {
+      id: "10",
+      name: "Ananya Das",
+      email: "ananya@example.com",
+      class: {
+        section: "C",
+        grade: "7",
+      },
+      analytics: {
+        progress: 62,
+        points: 2100,
+        streak: 3,
+      },
+      achievements: {
+        badges: ["Team Leader"],
+      },
+    },
+  ];
+
+  const [students, setStudents] = React.useState<Student[]>(hardcodedStudents);
+  const [viewStudents, setViewStudents] =
+    React.useState<Student[]>(hardcodedStudents);
+  const [selectedClass, setSelectedClass] =
+    React.useState<string>("All Sections");
+  const [selectedSection, setSelectedSection] =
+    React.useState<string>("All Classes");
+
+  // Extract unique sections and grades from hardcoded data
+  const classes = Array.from(
+    new Set(hardcodedStudents.map((s) => s.class.section))
+  ).sort();
+  const sections = Array.from(
+    new Set(hardcodedStudents.map((s) => s.class.grade))
+  ).sort();
 
   const router = useRouter();
 
   const id = useStore((state) => state.id);
-
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await axios.post("/api/studentsList", {
-          teacherId: id,
-        });
-        const data = response.data.map((s: any) => ({
-          id: s.id,
-          name: s.name,
-          email: s.email,
-          class: {
-            section: s.class?.section || "N/A",
-            grade: s.class?.grade || "N/A",
-          },
-          analytics: {
-            progress: s.analytics?.[0]?.progress || 0,
-            points: s.analytics?.[0]?.points || 0,
-            streak: s.analytics?.[0]?.streak || 0,
-          },
-          achievements: {
-            badges: s.achievements?.map((a: any) => a.badge) || [],
-          },
-        }));
-        setStudents(data);
-        setViewStudents(data);
-        setClasses(
-          Array.from(
-            new Set(data.map((s: any) => s.class.section))
-          ).sort() as string[]
-        );
-        setSelectedClass("All Classes");
-        setSections(
-          Array.from(
-            new Set(data.map((s: any) => s.class.grade))
-          ).sort() as string[]
-        );
-        setSelectedSection("All Sections");
-      } catch (error) {
-        console.error("Error fetching students:", error);
-      }
-    };
-
-    fetchStudents();
-  }, [id]);
 
   return (
     <div className="p-6 space-y-5 bg-gray-50 min-h-screen">
@@ -202,7 +338,7 @@ const StudentsPageUi = () => {
                 {viewStudents.map((s) => (
                   <tr
                     key={s.id}
-                    className="border-b border-gray-100 hover:bg-gray-50"
+                    className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
                     onClick={() => {
                       router.push(`/dashboard/students/${s.id}`);
                     }}
@@ -219,8 +355,7 @@ const StudentsPageUi = () => {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-700">
-                      {s.class.grade}
-                      {s.class.section}
+                      {s.class.grade}-{s.class.section}
                     </td>
                     <td className="px-4 py-3">
                       <div className="w-32 bg-gray-200 rounded-full h-2">
@@ -235,7 +370,10 @@ const StudentsPageUi = () => {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex space-x-2">
-                        {s.analytics.points} pts
+                        <span className="font-medium">
+                          {s.analytics.points}
+                        </span>{" "}
+                        pts
                       </div>
                     </td>
                     <td>

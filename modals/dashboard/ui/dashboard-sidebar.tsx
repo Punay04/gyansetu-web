@@ -22,6 +22,7 @@ import {
   ChevronRight,
   Copy,
   TrophyIcon,
+  ChartBarIcon,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import axios from "axios";
@@ -198,6 +199,22 @@ const DashboardSidebar = () => {
                   <TrophyIcon size={16} className="text-gray-500" />
                   <span>Quiz</span>
                   {pathname === "/dashboard/quiz" && (
+                    <div className="ml-auto w-1 h-4 bg-blue-500 rounded-full"></div>
+                  )}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => router.push("/dashboard/leaderboard")}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-md rounded transition-colors   ${
+                    pathname === "/dashboard/leaderboard"
+                      ? "bg-gray-100 text-gray-900"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  <ChartBarIcon size={16} className="text-gray-500" />
+                  <span>Leaderboard</span>
+                  {pathname === "/dashboard/leaderboard" && (
                     <div className="ml-auto w-1 h-4 bg-blue-500 rounded-full"></div>
                   )}
                 </SidebarMenuButton>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useStore } from "@/zustand/init";
 import {
@@ -12,7 +12,6 @@ import {
   PieChart,
   BookOpen,
 } from "lucide-react";
-import axios from "axios";
 import {
   BarChart,
   Bar,
@@ -28,128 +27,83 @@ import {
 
 const DashboardUi = () => {
   const username = useStore((state) => state.username);
-  const [totalStudentsCount, setTotalStudentsCount] = React.useState<
-    string | number
-  >("Loading...");
-  const [students, setStudents] = React.useState<any[]>([]);
-  const [subjectPerformance, setSubjectPerformance] = React.useState<any[]>([]);
-  const [quizCompletionData, setQuizCompletionData] = React.useState<any[]>([]);
-  const [averageProgress, setAverageProgress] = React.useState<number>(0);
 
-  const id = useStore((state) => state.id);
-
-  useEffect(() => {
-    const fetchStudentsData = async () => {
-      try {
-        const response = await axios.post("/api/studentsList", {
-          teacherId: id,
-        });
-        const data = response.data;
-        setStudents(data);
-        setTotalStudentsCount(data.length);
-
-        // Calculate average progress
-        let totalProgress = 0;
-        let studentsWithProgress = 0;
-
-        data.forEach((student: any) => {
-          if (student.analytics && student.analytics.length > 0) {
-            const progress = student.analytics[0]?.progress || 0;
-            if (progress > 0) {
-              totalProgress += progress;
-              studentsWithProgress++;
-            }
-          }
-        });
-
-        setAverageProgress(
-          studentsWithProgress > 0
-            ? Math.round(totalProgress / studentsWithProgress)
-            : 0
-        );
-
-        // Mock subject performance data (since we don't have actual subject-wise data)
-        setSubjectPerformance([
-          { name: "Mathematics", score: 76 },
-          { name: "Science", score: 82 },
-          { name: "English", score: 65 },
-          { name: "Computer Science", score: 90 },
-          { name: "Social Studies", score: 72 },
-        ]);
-
-        // Mock quiz completion data
-        setQuizCompletionData([
-          { name: "Completed", value: 68, color: "#3b82f6" }, // Blue-500
-          { name: "Pending", value: 32, color: "#dbeafe" }, // Blue-100
-        ]);
-      } catch (error) {
-        console.error("Error fetching students data:", error);
-      }
-    };
-
-    fetchStudentsData();
-  }, [id]);
-
-  const [recentActivities, setRecentActivities] = React.useState<string[]>([]);
-
-  const stats = [
-    { title: "Total Students", value: totalStudentsCount, icon: Users },
-    { title: "Challenges Completed", value: "18", icon: Trophy },
-    { title: "Badges Earned", value: recentActivities.length, icon: Award },
-    { title: "Average Engagement", value: "61%", icon: TrendingUp },
+  // Hardcoded student data
+  const students = [
+    { id: "1", name: "Punay Kukreja", points: 2850, progress: 92, badges: 12 },
+    { id: "2", name: "Vansh Goel", points: 2720, progress: 88, badges: 11 },
+    { id: "3", name: "Aditya Sharma", points: 2650, progress: 85, badges: 10 },
+    { id: "4", name: "Priya Patel", points: 2580, progress: 82, badges: 9 },
+    { id: "5", name: "Rahul Kumar", points: 2450, progress: 78, badges: 8 },
+    { id: "6", name: "Sneha Singh", points: 2380, progress: 75, badges: 7 },
+    { id: "7", name: "Arjun Mehta", points: 2320, progress: 72, badges: 6 },
+    { id: "8", name: "Kavya Reddy", points: 2250, progress: 68, badges: 5 },
+    { id: "9", name: "Vikram Joshi", points: 2180, progress: 65, badges: 4 },
+    { id: "10", name: "Ananya Das", points: 2100, progress: 62, badges: 3 },
   ];
 
-  type Student = {
-    name: string;
-    points: number;
-  };
+  // Hardcoded recent activities
+  const recentActivities = [
+    {
+      studentName: "Punay Kukreja",
+      badge: "Outstanding Achievement",
+      awardedAt: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+    },
+    {
+      studentName: "Vansh Goel",
+      badge: "Perfect Score",
+      awardedAt: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+    },
+    {
+      studentName: "Aditya Sharma",
+      badge: "Quick Learner",
+      awardedAt: new Date(Date.now() - 10800000).toISOString(), // 3 hours ago
+    },
+    {
+      studentName: "Priya Patel",
+      badge: "Consistent Performer",
+      awardedAt: new Date(Date.now() - 14400000).toISOString(), // 4 hours ago
+    },
+    {
+      studentName: "Rahul Kumar",
+      badge: "Problem Solver",
+      awardedAt: new Date(Date.now() - 18000000).toISOString(), // 5 hours ago
+    },
+  ];
 
-  const [topStudents, setTopStudents] = React.useState<Student[]>([]);
+  // Calculate average progress
+  const averageProgress = Math.round(
+    students.reduce((sum, student) => sum + student.progress, 0) /
+      students.length
+  );
 
-  useEffect(() => {
-    const fetchTopStudents = async () => {
-      try {
-        const response = await axios.post("/api/topStudents", {
-          teacherId: id,
-        });
-        const data = response.data.map((s: any) => ({
-          name: s.name,
-          points: s.analytics?.[0]?.points || 0,
-        }));
+  // Get top students sorted by points
+  const topStudents = [...students]
+    .sort((a, b) => b.points - a.points)
+    .slice(0, 5);
 
-        // Sort descending by points
-        data.sort(
-          (a: { points: number }, b: { points: number }) => b.points - a.points
-        );
+  // Subject performance data
+  const subjectPerformance = [
+    { name: "Mathematics", score: 76 },
+    { name: "Science", score: 82 },
+    { name: "English", score: 65 },
+    { name: "Computer Science", score: 90 },
+    { name: "Social Studies", score: 72 },
+  ];
 
-        // Optionally take top 5
-        const top5 = data.slice(0, 5);
+  // Quiz completion data
+  const quizCompletionData = [
+    { name: "Completed", value: 68, color: "#3b82f6" }, // Blue-500
+    { name: "Pending", value: 32, color: "#dbeafe" }, // Blue-100
+  ];
 
-        setTopStudents(top5);
-      } catch (error) {
-        console.error("Error fetching top students:", error);
-      }
-    };
-
-    fetchTopStudents();
-  }, [id]);
-
-  useEffect(() => {
-    const fetchRecentActivities = async () => {
-      try {
-        const response = await axios.post("/api/recentAchievement", {
-          teacherId: id,
-        });
-        const data = response.data;
-        const top5 = data.slice(0, 5);
-        setRecentActivities(top5);
-      } catch (error) {
-        console.error("Error fetching recent activities:", error);
-      }
-    };
-
-    fetchRecentActivities();
-  }, [id]);
+  // Stats for the dashboard
+  const stats = [
+    { title: "Total Students", value: students.length, icon: Users },
+    { title: "Challenges Completed", value: "187", icon: Trophy },
+    { title: "Badges Earned", value: recentActivities.length, icon: Award },
+    { title: "Average Engagement", value: "87%", icon: TrendingUp },
+  ];
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
@@ -194,9 +148,6 @@ const DashboardUi = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {!topStudents.length && (
-                <p className="text-sm text-gray-500">Loading...</p>
-              )}
               {topStudents.map((student, index) => (
                 <div
                   key={index}
